@@ -4,18 +4,25 @@
   "description": "A design system template with React and Storybook",
   "main": "src/index.js",
   "scripts": {
-    "start": "start-storybook -p 8080"
+    "start": "start-storybook -p 8080",
+    "build:css": "npx tailwindcss -i src/components/Share/styles/main.css -o src/components/Share/Styles/build.css",
+    "watch:css": "onchange src/components/Share/*.tsx -- yarn run build:css",
+    "dev": "npm-run-all --parallel watch:css start"
   },
   "dependencies": {
     "@babel/core": "7.4.5",
     "@storybook/react": "latest",
     "babel-loader": "8.0.6",
+    "babel-preset-react-app": "^10.0.1",
     "react": "16.8.6",
     "react-dom": "16.8.6"
   },
   "devDependencies": {
     "@types/storybook__react": "4.0.2",
-    "nodemon": "1.18.4"
+    "nodemon": "1.18.4",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "tailwindcss": "^3.1.8"
   },
   "keywords": []
 }
