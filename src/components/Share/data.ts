@@ -15,7 +15,7 @@ export const persons: Person[] = [
   }
 ];
 
-export const groups = [
+export const groups: Person[] = [
   {
     id: 3,
     name: 'Product',

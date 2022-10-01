@@ -21,6 +21,11 @@ export type PersonItemProps = {
   handleSelectPerson: (person: Person) => void;
 }
 
+export type ShareProps = {
+  persons: Person[],
+  groups: Person[]
+}
+
 export type AvatarProps = {
   name: string,
   size?: number;

@@ -10,13 +10,13 @@ import {
   CloseIcon,
 } from './Icons';
 import {
-  AccessType,
   AccessTypeId,
   AvatarProps,
   ChipItemProps,
   Person,
   PersonItemProps,
   ShareCurrentView,
+  ShareProps,
 } from './types';
 import avatar1 from '../../images/avatar-1.svg';
 import { accessTypes, groups, persons } from './data';
@@ -95,13 +95,15 @@ const Footer = (
   </div>
 );
 
-export default function () {
+export default function (props: ShareProps) {
+  const { persons, groups } = props;
   const [currentView, setCurrentView] =
-    useState<ShareCurrentView>('person-selection');
+    useState<ShareCurrentView>('share-button');
   const [selectedPersons, setSelectedPersons] = useState<Person[]>([]);
   const [searchText, setSearchText] = useState('');
   const [allPersons, setAllPersons] = useState(persons);
   const [allGroups, setAllGroups] = useState(groups);
+  const [selectedAccessType, setSelectedAccessType] = useState('no-access');
 
   // Todo: change access need to implement
 
@@ -134,6 +136,7 @@ export default function () {
   const handleInviteClick = () => {
     // Todo: Make api call here
     console.log({ selectedPersons });
+    console.log({ selectedAccessType });
     setCurrentView('share-button');
   };
 
@@ -166,6 +169,10 @@ export default function () {
 
   const handleOnSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+  };
+
+  const handleAccessTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAccessType(e.target.value);
   };
 
   return (
@@ -231,7 +238,11 @@ export default function () {
                 </span>
               </div>
               <div className="group relative ml-auto">
-                <select className="p-2 text-xs text-gray-500">
+                <select
+                  className="p-2 text-xs text-gray-500"
+                  onChange={handleAccessTypeChange}
+                  value={selectedAccessType}
+                >
                   {accessTypes.map((accessType) => (
                     <option value={accessType.id}>{accessType.label}</option>
                   ))}
@@ -261,7 +272,11 @@ export default function () {
             />
 
             <div className="flex ml-auto">
-              <select className="p-2 text-xs text-gray-500 bg-transparent mr-3">
+              <select
+                className="p-2 text-xs text-gray-500 bg-transparent mr-3"
+                onChange={handleAccessTypeChange}
+                value={selectedAccessType}
+              >
                 {accessTypes.map((accessType) => (
                   <option value={accessType.id}>{accessType.label}</option>
                 ))}
