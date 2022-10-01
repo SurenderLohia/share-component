@@ -20,63 +20,15 @@ import {
 } from './types';
 import avatar1 from '../../images/avatar-1.svg';
 import { accessTypes, groups, persons } from './data';
+import { Avatar } from '../Avatar';
+import { PersonItem } from '../PersonItem';
+import { ChipItem } from '../ChipItem';
 
 const buttonClass =
   'bg-gray-1000 text-white font-main font-normal py-2 px-4 text-sm rounded flex gap-2 items-center hover:bg-gray-700 mb-1';
 
 const SectionTitle = (text: string) => {
   return <h3 className="text-base font-main text-gray-700 mb-3"> {text} </h3>;
-};
-
-const Avatar = (props: AvatarProps) => {
-  const { name = '-', avatarUrl = '', size = 6 } = props;
-  const firstLetter = name.slice(0, 1);
-
-  if (avatarUrl) {
-    return (
-      <img
-        className={`w-${size}`}
-        src={avatarUrl}
-        alt={name || 'avatar-image'}
-      />
-    );
-  }
-
-  // Todo: Need to use size prop for width & height
-  return (
-    <div
-      className={`flex w-6 h-6 bg-gray-500 text-white rounded text-sm items-center`}
-    >
-      <span className="flex-1">{firstLetter}</span>
-    </div>
-  );
-};
-
-const PersonItem = (props: PersonItemProps) => {
-  const { id, name, avatarUrl, accessType, handleSelectPerson } = props;
-  const person = { id, name, accessType, avatarUrl };
-  return (
-    <button
-      type="button"
-      className="flex gap-3 py-2 text-gray-900"
-      onClick={() => handleSelectPerson(person)}
-    >
-      <Avatar name={name} avatarUrl={avatarUrl} />
-      {name}
-    </button>
-  );
-};
-
-const ChipItem = (props: ChipItemProps) => {
-  const { text, id } = props;
-  return (
-    <span className="inline-flex px-2 py-1 rounded bg-gray-200 text-sm gap-3 items-center">
-      <span>{text}</span>
-      <button type="button" onClick={() => {}} data-person-id={id}>
-        {CloseIcon}
-      </button>
-    </span>
-  );
 };
 
 const Footer = (
@@ -244,7 +196,9 @@ export default function (props: ShareProps) {
                   value={selectedAccessType}
                 >
                   {accessTypes.map((accessType) => (
-                    <option value={accessType.id}>{accessType.label}</option>
+                    <option key={accessType.id} value={accessType.id}>
+                      {accessType.label}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -278,7 +232,9 @@ export default function (props: ShareProps) {
                 value={selectedAccessType}
               >
                 {accessTypes.map((accessType) => (
-                  <option value={accessType.id}>{accessType.label}</option>
+                  <option key={accessType.id} value={accessType.id}>
+                    {accessType.label}
+                  </option>
                 ))}
               </select>
               <button
@@ -298,6 +254,7 @@ export default function (props: ShareProps) {
                 //.filter((person: Person) => selectedPersons.includes(person.id))
                 .map((person) => (
                   <PersonItem
+                    key={person.id}
                     id={person.id}
                     name={person.name}
                     avatarUrl={avatar1}
@@ -312,6 +269,7 @@ export default function (props: ShareProps) {
               {SectionTitle('Select a group')}
               {allGroups.map((person) => (
                 <PersonItem
+                  key={person.id}
                   id={person.id}
                   name={person.name}
                   accessType={person.accessType as AccessTypeId}
