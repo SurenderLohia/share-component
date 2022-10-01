@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
 import './styles/build.css';
 
-import { ShareIcon, GlobeIcon, ThumbLogo, HelpIcon, LinkIcon } from './Icons';
-import { AvatarProps, PersonItemProps, ShareCurrentView } from './types';
+import {
+  ShareIcon,
+  GlobeIcon,
+  ThumbLogo,
+  HelpIcon,
+  LinkIcon,
+  CloseIcon,
+} from './Icons';
+import {
+  AccessType,
+  AvatarProps,
+  ChipItemProps,
+  Person,
+  PersonItemProps,
+  ShareCurrentView,
+} from './types';
 import avatar1 from '../../images/avatar-1.svg';
 import { groups, persons } from './data';
 
@@ -38,12 +52,29 @@ const Avatar = (props: AvatarProps) => {
 };
 
 const PersonItem = (props: PersonItemProps) => {
-  const { id, name, avatarUrl } = props;
+  const { id, name, avatarUrl, accessType, handleSelectPerson } = props;
+  const person = { id, name, accessType, avatarUrl };
   return (
-    <button type="button" className="flex gap-3 py-2 text-gray-900">
+    <button
+      type="button"
+      className="flex gap-3 py-2 text-gray-900"
+      onClick={() => handleSelectPerson(person)}
+    >
       <Avatar name={name} avatarUrl={avatarUrl} />
       {name}
     </button>
+  );
+};
+
+const ChipItem = (props: ChipItemProps) => {
+  const { text, id } = props;
+  return (
+    <span className="inline-flex px-2 py-1 rounded bg-gray-200 text-sm gap-3 items-center">
+      <span>{text}</span>
+      <button type="button" onClick={() => {}} data-person-id={id}>
+        {CloseIcon}
+      </button>
+    </span>
   );
 };
 
@@ -65,11 +96,8 @@ const Footer = (
 
 export default function () {
   const [currentView, setCurrentView] =
-    useState<ShareCurrentView>('share-button');
-
-  const changeView = (view: ShareCurrentView) => {
-    setCurrentView(view);
-  };
+    useState<ShareCurrentView>('person-selection');
+  const [selectedPersons, setSelectedPersons] = useState<Person[]>([]);
 
   const handleShareButtonClick = () => {
     setCurrentView('list');
@@ -83,17 +111,45 @@ export default function () {
     setCurrentView('share-button');
   };
 
+  const addPerson = (person: Person) => {
+    const newPersons = [...selectedPersons, person];
+    setSelectedPersons(newPersons);
+  };
+
+  const handleSelectPerson = (person: Person) => {
+    addPerson(person);
+  };
+
+  const removePerson = (id: number) => {
+    const newPersons = [...selectedPersons].filter(
+      (person) => person.id !== id
+    );
+    setSelectedPersons(newPersons);
+  };
+
+  const handleRemovePerson = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const personId = e.target.getAttribute('data-person-id');
+    if (personId) {
+      const id = Number(personId);
+      removePerson(id);
+    }
+  };
+
   return (
     <div className="share-container">
       {currentView === 'share-button' && (
-        <button
-          className={buttonClass}
-          type="button"
-          onClick={handleShareButtonClick}
-        >
-          Share
-          {ShareIcon}
-        </button>
+        <>
+          <button
+            className={buttonClass}
+            type="button"
+            onClick={handleShareButtonClick}
+          >
+            Share
+            {ShareIcon}
+          </button>
+        </>
       )}
       {/* Invite-view */}
       {currentView === 'list' && (
@@ -158,6 +214,12 @@ export default function () {
       {currentView === 'person-selection' && (
         <div className="border border-gray-200 rounded-lg">
           <div className="flex px-3 py-3 bg-gray-50 rounded-t-lg items-center">
+            <div onClick={handleRemovePerson}>
+              {selectedPersons.map((person) => (
+                <ChipItem text={person.name} id={person.id} />
+              ))}
+            </div>
+
             <input
               type="text"
               className="flex-1 text-sm text-gray-500 font-main focus:bottom-0 p-1 bg-transparent focus:outline-0"
@@ -186,13 +248,20 @@ export default function () {
                 id={person.id}
                 name={person.name}
                 avatarUrl={avatar1}
+                accessType={person.accessType as AccessType}
+                handleSelectPerson={handleSelectPerson}
               />
             ))}
           </div>
           <div className="pl-6 pr-4 py-4">
             {SectionTitle('Select a group')}
             {groups.map((person) => (
-              <PersonItem id={person.id} name={person.name} />
+              <PersonItem
+                id={person.id}
+                name={person.name}
+                accessType={person.accessType as AccessType}
+                handleSelectPerson={handleSelectPerson}
+              />
             ))}
           </div>
         </div>
