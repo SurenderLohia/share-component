@@ -43,3 +43,4 @@ Not fully completed the below features due to time constrains
 1. Once selected the person, then selected person should be removed the from the persons list
 2. Person selection selected item style
 3. When multiple persons added, need to handle UI
+4. Add Independent All Components in storybook
