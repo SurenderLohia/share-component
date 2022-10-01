@@ -11,6 +11,7 @@ import {
 } from './Icons';
 import {
   AccessType,
+  AccessTypeId,
   AvatarProps,
   ChipItemProps,
   Person,
@@ -18,7 +19,7 @@ import {
   ShareCurrentView,
 } from './types';
 import avatar1 from '../../images/avatar-1.svg';
-import { groups, persons } from './data';
+import { accessTypes, groups, persons } from './data';
 
 const buttonClass =
   'bg-gray-1000 text-white font-main font-normal py-2 px-4 text-sm rounded flex gap-2 items-center hover:bg-gray-700 mb-1';
@@ -102,6 +103,8 @@ export default function () {
   const [allPersons, setAllPersons] = useState(persons);
   const [allGroups, setAllGroups] = useState(groups);
 
+  // Todo: change access need to implement
+
   useEffect(() => {
     if (searchText) {
       const filteredPersons = persons.filter((person) =>
@@ -129,12 +132,15 @@ export default function () {
   };
 
   const handleInviteClick = () => {
+    // Todo: Make api call here
+    console.log({ selectedPersons });
     setCurrentView('share-button');
   };
 
   const addPerson = (person: Person) => {
     const newPersons = [...selectedPersons, person];
     setSelectedPersons(newPersons);
+    setSearchText('');
   };
 
   const handleSelectPerson = (person: Person) => {
@@ -227,8 +233,9 @@ export default function () {
               </div>
               <div className="group relative ml-auto">
                 <select className="p-2 text-xs text-gray-500">
-                  <option value="no-access">No access</option>
-                  <option value="full-access">Full access</option>
+                  {accessTypes.map((accessType) => (
+                    <option value={accessType.id}>{accessType.label}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -256,8 +263,9 @@ export default function () {
 
             <div className="flex ml-auto">
               <select className="p-2 text-xs text-gray-500 bg-transparent mr-3">
-                <option value="no-access">No access</option>
-                <option value="full-access">Full access</option>
+                {accessTypes.map((accessType) => (
+                  <option value={accessType.id}>{accessType.label}</option>
+                ))}
               </select>
               <button
                 type="button"
@@ -278,7 +286,7 @@ export default function () {
                   id={person.id}
                   name={person.name}
                   avatarUrl={avatar1}
-                  accessType={person.accessType as AccessType}
+                  accessType={person.accessType as AccessTypeId}
                   handleSelectPerson={handleSelectPerson}
                 />
               ))}
@@ -289,7 +297,7 @@ export default function () {
               <PersonItem
                 id={person.id}
                 name={person.name}
-                accessType={person.accessType as AccessType}
+                accessType={person.accessType as AccessTypeId}
                 handleSelectPerson={handleSelectPerson}
               />
             ))}

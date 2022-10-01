@@ -1,10 +1,15 @@
-export type AccessType = 'full-access' | 'can-edit' | 'can-view' | 'no-access';
+export type AccessTypeId = 'full-access' | 'can-edit' | 'can-view' | 'no-access';
+
+export type AccessType = {
+  id: AccessTypeId,
+  label: string
+}
 
 export type Person = {
   id: number,
   name: string,
   avatarUrl?: string;
-  accessType: AccessType;
+  accessType: AccessTypeId;
 }
 
 export type PersonItemProps = {
@@ -12,7 +17,7 @@ export type PersonItemProps = {
   name: string,
   avatarSize?: number
   avatarUrl?: string;
-  accessType: AccessType;
+  accessType: AccessTypeId;
   handleSelectPerson: (person: Person) => void;
 }
 
