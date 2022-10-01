@@ -1,10 +1,51 @@
 import React from 'react';
-import { ShareIcon, GlobeIcon, ThumbLogo, HelpIcon, LinkIcon } from './Icons';
-
 import './styles/build.css';
+
+import { ShareIcon, GlobeIcon, ThumbLogo, HelpIcon, LinkIcon } from './Icons';
+import { AvatarProps, PersonItemProps } from './types';
+import avatar1 from '../../images/avatar-1.svg';
+import { groups, persons } from './data';
 
 const buttonClass =
   'bg-gray-1000 text-white font-main font-normal py-2 px-4 text-sm rounded flex gap-2 items-center hover:bg-gray-700 mb-1';
+
+const SectionTitle = (text: string) => {
+  return <h3 className="text-base font-main text-gray-700 mb-3"> {text} </h3>;
+};
+
+const Avatar = (props: AvatarProps) => {
+  const { name = '-', avatarUrl = '', size = 6 } = props;
+  const firstLetter = name.slice(0, 1);
+
+  if (avatarUrl) {
+    return (
+      <img
+        className={`w-${size}`}
+        src={avatarUrl}
+        alt={name || 'avatar-image'}
+      />
+    );
+  }
+
+  // Todo: Need to use size prop for width & height
+  return (
+    <div
+      className={`flex w-6 h-6 bg-gray-500 text-white rounded text-sm items-center`}
+    >
+      <span className="flex-1">{firstLetter}</span>
+    </div>
+  );
+};
+
+const PersonItem = (props: PersonItemProps) => {
+  const { id, name, avatarUrl } = props;
+  return (
+    <button type="button" className="flex gap-3 py-2 text-gray-900">
+      <Avatar name={name} avatarUrl={avatarUrl} />
+      {name}
+    </button>
+  );
+};
 
 const Footer = (
   <div className="flex px-3 py-3 bg-gray-50 rounded-b-lg">
@@ -29,7 +70,8 @@ export default function () {
         Share
         {ShareIcon}
       </button>
-      <div className="border border-gray-200 rounded-lg">
+      {/* Invite-view */}
+      <div className="border border-gray-200 rounded-lg hidden">
         <div className="flex border-b border-gray-200">
           <div className="flex pl-5 pr-3 py-4 items-center">
             {GlobeIcon}
@@ -83,6 +125,42 @@ export default function () {
           </div>
         </div>
         {Footer}
+      </div>
+      {/* Person selection view */}
+      <div className="border border-gray-200 rounded-lg">
+        <div className="flex px-3 py-3 bg-gray-50 rounded-t-lg items-center">
+          <input
+            type="text"
+            className="flex-1 text-sm text-gray-500 font-main focus:bottom-0 p-1 bg-transparent focus:outline-0"
+            placeholder="Search emails, names or groups"
+            value=""
+          />
+
+          <div className="flex ml-auto">
+            <select className="p-2 text-xs text-gray-500 bg-transparent mr-3">
+              <option value="no-access">No access</option>
+              <option value="full-access">Full access</option>
+            </select>
+            <button
+              type="button"
+              className="border border-gray-200 rounded-lg text-sm text-gray-700 px-3 py-2"
+            >
+              Invite
+            </button>
+          </div>
+        </div>
+        <div className="pl-6 pr-4 py-4">
+          {SectionTitle('Select a person')}
+          {persons.map((person) => (
+            <PersonItem id={person.id} name={person.name} avatarUrl={avatar1} />
+          ))}
+        </div>
+        <div className="pl-6 pr-4 py-4">
+          {SectionTitle('Select a group')}
+          {groups.map((person) => (
+            <PersonItem id={person.id} name={person.name} />
+          ))}
+        </div>
       </div>
     </div>
   );
