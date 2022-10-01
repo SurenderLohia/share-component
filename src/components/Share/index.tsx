@@ -165,7 +165,6 @@ export default function () {
   };
 
   const handleOnSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('on handleOnSearchTextChange');
     setSearchText(e.target.value);
   };
 
@@ -276,32 +275,36 @@ export default function () {
               </button>
             </div>
           </div>
-          <div className="pl-6 pr-4 py-4">
-            {SectionTitle('Select a person')}
-            {allPersons
-              // Todo: need remove selected items from the list
-              //.filter((person: Person) => selectedPersons.includes(person.id))
-              .map((person) => (
+          {allPersons.length > 0 && (
+            <div className="pl-6 pr-4 py-4">
+              {SectionTitle('Select a person')}
+              {allPersons
+                // Todo: need remove selected items from the list
+                //.filter((person: Person) => selectedPersons.includes(person.id))
+                .map((person) => (
+                  <PersonItem
+                    id={person.id}
+                    name={person.name}
+                    avatarUrl={avatar1}
+                    accessType={person.accessType as AccessTypeId}
+                    handleSelectPerson={handleSelectPerson}
+                  />
+                ))}
+            </div>
+          )}
+          {allGroups.length > 0 && (
+            <div className="pl-6 pr-4 py-4">
+              {SectionTitle('Select a group')}
+              {allGroups.map((person) => (
                 <PersonItem
                   id={person.id}
                   name={person.name}
-                  avatarUrl={avatar1}
                   accessType={person.accessType as AccessTypeId}
                   handleSelectPerson={handleSelectPerson}
                 />
               ))}
-          </div>
-          <div className="pl-6 pr-4 py-4">
-            {SectionTitle('Select a group')}
-            {groups.map((person) => (
-              <PersonItem
-                id={person.id}
-                name={person.name}
-                accessType={person.accessType as AccessTypeId}
-                handleSelectPerson={handleSelectPerson}
-              />
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>
