@@ -19,11 +19,13 @@ export const groups = [
   {
     id: 3,
     name: 'Product',
+    avatarUrl: '',
     accessType: 'no-access'
   },
   {
     id: 4,
     name: 'Engineering',
+    avatarUrl: '',
     accessType: 'no-access'
   },
 ];

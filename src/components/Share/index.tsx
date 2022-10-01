@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/build.css';
 
 import {
@@ -98,6 +98,27 @@ export default function () {
   const [currentView, setCurrentView] =
     useState<ShareCurrentView>('person-selection');
   const [selectedPersons, setSelectedPersons] = useState<Person[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [allPersons, setAllPersons] = useState(persons);
+  const [allGroups, setAllGroups] = useState(groups);
+
+  useEffect(() => {
+    if (searchText) {
+      const filteredPersons = persons.filter((person) =>
+        person.name.toLowerCase().includes(searchText)
+      );
+
+      const filteredGroups = groups.filter((group) =>
+        group.name.toLowerCase().includes(searchText)
+      );
+
+      setAllGroups(filteredGroups);
+      setAllPersons(filteredPersons);
+    } else {
+      setAllPersons(persons);
+      setAllGroups(groups);
+    }
+  }, [searchText]);
 
   const handleShareButtonClick = () => {
     setCurrentView('list');
@@ -135,6 +156,11 @@ export default function () {
       const id = Number(personId);
       removePerson(id);
     }
+  };
+
+  const handleOnSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('on handleOnSearchTextChange');
+    setSearchText(e.target.value);
   };
 
   return (
@@ -224,7 +250,8 @@ export default function () {
               type="text"
               className="flex-1 text-sm text-gray-500 font-main focus:bottom-0 p-1 bg-transparent focus:outline-0"
               placeholder="Search emails, names or groups"
-              value=""
+              value={searchText}
+              onChange={handleOnSearchTextChange}
             />
 
             <div className="flex ml-auto">
@@ -243,15 +270,18 @@ export default function () {
           </div>
           <div className="pl-6 pr-4 py-4">
             {SectionTitle('Select a person')}
-            {persons.map((person) => (
-              <PersonItem
-                id={person.id}
-                name={person.name}
-                avatarUrl={avatar1}
-                accessType={person.accessType as AccessType}
-                handleSelectPerson={handleSelectPerson}
-              />
-            ))}
+            {allPersons
+              // Todo: need remove selected items from the list
+              //.filter((person: Person) => selectedPersons.includes(person.id))
+              .map((person) => (
+                <PersonItem
+                  id={person.id}
+                  name={person.name}
+                  avatarUrl={avatar1}
+                  accessType={person.accessType as AccessType}
+                  handleSelectPerson={handleSelectPerson}
+                />
+              ))}
           </div>
           <div className="pl-6 pr-4 py-4">
             {SectionTitle('Select a group')}

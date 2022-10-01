@@ -1,4 +1,4 @@
-export type AccessType = 'no-access' | 'full-access';
+export type AccessType = 'full-access' | 'can-edit' | 'can-view' | 'no-access';
 
 export type Person = {
   id: number,
